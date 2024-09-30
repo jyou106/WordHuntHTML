@@ -3,7 +3,7 @@
 ## Word Hunt Game
 
 ### Description
-Word Hunt is a fun and engaging word search game where players can find words by connecting letters on a 4x4 board. Players have 80 seconds to find as many words as they can.
+Word Hunt is a word search game where players can find words by connecting letters on a 4x4 board. Players have 80 seconds to find as many words as they can.
 
 ### How to Play
 1. Click and drag your mouse over adjacent letters to form words.
