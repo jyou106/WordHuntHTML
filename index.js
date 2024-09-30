@@ -179,6 +179,13 @@ function resetGame() {
   startGame(); // Restart the game
 }
 
+// Show the How to Play modal when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  startGame(); // Start the game once the DOM is loaded
+  document.getElementById('how-to-play').style.display = 'block'; // Show the How to Play modal
+});
+
+// Start the game when the Start Game button is clicked
+document.getElementById('start-game-popup').addEventListener('click', () => {
+  document.getElementById('how-to-play').style.display = 'none'; // Hide the How to Play modal
+  startGame(); // Start the game
 });
