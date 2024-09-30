@@ -47,11 +47,11 @@ function createBoard() {
 
 function startGame() {
   resetTimer();
-  score = 0; // Reset score when starting a new game
-  foundWords.clear(); // Clear found words when starting a new game
-  updateScoreDisplay(); // Update score display
-  createBoard(); // Create the board first
-  timer = setInterval(updateTimer, 1000); // Start the timer after board creation
+  score = 0; 
+  foundWords.clear(); 
+  updateScoreDisplay(); 
+  createBoard(); 
+  timer = setInterval(updateTimer, 1000); 
 }
 
 function resetTimer() {
@@ -94,7 +94,6 @@ function showFinalWords() {
 }
 
 async function isValidWord(word) {
-  // Check for length and if it's already found
   if (word.length < 3 || foundWords.has(word)) {
     return false;
   }
@@ -133,7 +132,7 @@ async function calculateScore() {
 }
 
 function updateScoreDisplay() {
-  document.getElementById('score-value').textContent = score; // Update the score display
+  document.getElementById('score-value').textContent = score; 
 }
 
 // Await calculateScore in mouseup event
@@ -169,23 +168,22 @@ document.getElementById('play-again-popup').addEventListener('click', () => {
   resetGame();
 });
 
-// Function to reset the game
 function resetGame() {
-  score = 0; // Reset score
-  foundWords.clear(); // Clear found words
-  updateScoreDisplay(); // Reset score display
+  score = 0; 
+  foundWords.clear(); 
+  updateScoreDisplay(); 
   document.getElementById('final-words').innerHTML = ''; // Clear final words
   document.getElementById('modal').style.display = 'none'; // Hide modal
-  startGame(); // Restart the game
+  startGame(); 
 }
 
 // Show the How to Play modal when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('how-to-play').style.display = 'block'; // Show the How to Play modal
+  document.getElementById('how-to-play').style.display = 'block'; 
 });
 
 // Start the game when the Start Game button is clicked
 document.getElementById('start-game-popup').addEventListener('click', () => {
-  document.getElementById('how-to-play').style.display = 'none'; // Hide the How to Play modal
-  startGame(); // Start the game
+  document.getElementById('how-to-play').style.display = 'none'; 
+  startGame(); 
 });
