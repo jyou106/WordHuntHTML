@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Playfair Display', serif;
   text-align: center;
 }
 
@@ -31,7 +31,7 @@ body {
 }
 
 .tile.selected {
-  background-color: #a0d3e8; /* Color for selected letters */
+  background-color: #FF9999; /* Color for selected letters */
 }
 
 .modal {
@@ -61,11 +61,11 @@ body {
   text-align: center; /* Center the words in the modal */
 }
 
-#play-again-popup, /* This styles both buttons */
+#play-again-popup, 
 #start-game-popup {
   margin-top: 20px; /* Add space above the button */
   padding: 10px 20px; /* Button padding */
-  background-color: #4CAF50; /* Green background */
+  background-color: #b47ede; 
   color: white; /* White text */
   border: none; /* No border */
   border-radius: 5px; /* Rounded corners */
@@ -75,5 +75,5 @@ body {
 
 #play-again-popup:hover,
 #start-game-popup:hover {
-  background-color: #45a049; /* Darker green on hover */
+  background-color: #9966CB;
 }
