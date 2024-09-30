@@ -13,7 +13,7 @@ Word Hunt is a word search game where players can find words by connecting lette
 5. After time runs out, your score will be displayed along with the words you found.
 
 ### Features
-- Start Button Option
+- Start button option
 - Interactive letter board
 - Scoring system based on word length
 - Final score display
