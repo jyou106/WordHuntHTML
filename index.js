@@ -33,15 +33,15 @@ function createBoard() {
   boardElement.innerHTML = ''; // Clear previous board
 
   for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-          const randomIndex = Math.floor(Math.random() * diceFaces[i].length);
-          const letter = diceFaces[i][randomIndex][Math.floor(Math.random() * 6)];
-          const tile = document.createElement('div');
-          tile.classList.add('tile');
-          tile.textContent = letter;
-          tile.dataset.letter = letter; // Store the letter in the dataset
-          boardElement.appendChild(tile);
-      }
+    for (let j = 0; j < 4; j++) {
+      const randomIndex = Math.floor(Math.random() * diceFaces[i].length);
+      const letter = diceFaces[i][randomIndex][Math.floor(Math.random() * 6)];
+      const tile = document.createElement('div');
+      tile.classList.add('tile');
+      tile.textContent = letter;
+      tile.dataset.letter = letter; // Store the letter in the dataset
+      boardElement.appendChild(tile);
+    }
   }
 }
 
@@ -50,22 +50,22 @@ function startGame() {
   score = 0; // Reset score when starting a new game
   foundWords.clear(); // Clear found words when starting a new game
   updateScoreDisplay(); // Update score display
-  timer = setInterval(updateTimer, 1000);
-  createBoard(); // Create the board when the game starts
+  createBoard(); // Create the board first
+  timer = setInterval(updateTimer, 1000); // Start the timer after board creation
 }
 
 function resetTimer() {
-  timeLeft = 10;
+  timeLeft = 10; // Set timer to 80 seconds 
   document.getElementById('time').textContent = timeLeft;
 }
 
 function updateTimer() {
   if (timeLeft > 0) {
-      timeLeft--;
-      document.getElementById('time').textContent = timeLeft;
+    timeLeft--;
+    document.getElementById('time').textContent = timeLeft;
   } else {
-      clearInterval(timer);
-      endGame();
+    clearInterval(timer);
+    endGame();
   }
 }
 
@@ -82,28 +82,53 @@ function showFinalWords() {
 
   // Convert foundWords to an array and sort
   const sortedWords = Array.from(foundWords).sort((a, b) => {
-      return b.length - a.length || a.localeCompare(b); // Sort by length (longest first), then alphabetically
+    return b.length - a.length || a.localeCompare(b); // Sort by length (longest first), then alphabetically
   });
 
   // Display sorted words
   sortedWords.forEach(word => {
-      const listItem = document.createElement('li');
-      listItem.textContent = `${word} (Score: ${scoreTable[word.length] || 0})`;
-      finalWordsList.appendChild(listItem);
+    const listItem = document.createElement('li');
+    listItem.textContent = `${word} (Score: ${scoreTable[word.length] || 0})`;
+    finalWordsList.appendChild(listItem);
   });
 }
 
-function isValidWord(word) {
-  return word.length >= 3 && !foundWords.has(word); // Check if it's valid and not previously found
+async function isValidWord(word) {
+  // Check for length and if it's already found
+  if (word.length < 3 || foundWords.has(word)) {
+    return false;
+  }
+
+  try {
+    // Fetch word data from the dictionary API
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    
+    // Check if the API request was successful
+    if (!response.ok) {
+      return false;  // Word not found or error occurred
+    }
+
+    const data = await response.json();
+    
+    // If the word is valid, the API should return an array with word details
+    return data.length > 0;
+  } catch (error) {
+    console.error('Error fetching word from dictionary:', error);
+    return false;  // In case of a network error or API issue
+  }
 }
 
-function calculateScore() {
+async function calculateScore() {
   const word = selectedLetters.join('');
-  if (isValidWord(word)) {
-      foundWords.add(word); // Add valid word to foundWords set
-      const wordLength = selectedLetters.length;
-      score += scoreTable[wordLength] || 0; // Update score based on word length
-      updateScoreDisplay(); // Update the score display after scoring
+  
+  // Wait for the word validation from the API
+  const valid = await isValidWord(word);
+  
+  if (valid) {
+    foundWords.add(word); // Add valid word to foundWords set
+    const wordLength = selectedLetters.length;
+    score += scoreTable[wordLength] || 0; // Update score based on word length
+    updateScoreDisplay(); // Update the score display after scoring
   }
 }
 
@@ -111,12 +136,9 @@ function updateScoreDisplay() {
   document.getElementById('score-value').textContent = score; // Update the score display
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  startGame(); // Start the game
-});
-
-document.addEventListener('mouseup', () => {
-  calculateScore(); // Calculate score on mouse up
+// Await calculateScore in mouseup event
+document.addEventListener('mouseup', async () => {
+  await calculateScore(); // Calculate score on mouse up
   const tiles = document.querySelectorAll('.tile.selected');
   tiles.forEach(tile => tile.classList.remove('selected')); // Deselect all
   selectedLetters = []; // Clear selected letters for the next word
@@ -124,21 +146,21 @@ document.addEventListener('mouseup', () => {
 
 document.getElementById('board').addEventListener('mousedown', (event) => {
   if (event.target.classList.contains('tile')) {
-      const tile = event.target;
-      if (!tile.classList.contains('selected')) {
-          tile.classList.add('selected');
-          selectedLetters.push(tile.dataset.letter); // Use dataset to store letter
-      }
+    const tile = event.target;
+    if (!tile.classList.contains('selected')) {
+      tile.classList.add('selected');
+      selectedLetters.push(tile.dataset.letter); // Use dataset to store letter
+    }
   }
 });
 
 document.getElementById('board').addEventListener('mouseover', (event) => {
   if (event.target.classList.contains('tile') && event.buttons === 1) { // Only highlight if mouse is pressed
-      const tile = event.target;
-      if (!tile.classList.contains('selected')) {
-          tile.classList.add('selected');
-          selectedLetters.push(tile.dataset.letter); // Use dataset to store letter
-      }
+    const tile = event.target;
+    if (!tile.classList.contains('selected')) {
+      tile.classList.add('selected');
+      selectedLetters.push(tile.dataset.letter); // Use dataset to store letter
+    }
   }
 });
 
@@ -156,3 +178,7 @@ function resetGame() {
   document.getElementById('modal').style.display = 'none'; // Hide modal
   startGame(); // Restart the game
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  startGame(); // Start the game once the DOM is loaded
+});
