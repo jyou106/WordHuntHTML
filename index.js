@@ -56,13 +56,13 @@ function startGame() {
 
 function resetTimer() {
   timeLeft = 10; // Set timer to 80 seconds 
-  document.getElementById('time').textContent = timeLeft;
+  document.getElementById('time').textContent = `Timer: ${timeLeft}`; 
 }
 
 function updateTimer() {
   if (timeLeft > 0) {
     timeLeft--;
-    document.getElementById('time').textContent = timeLeft;
+    document.getElementById('time').textContent = `Timer: ${timeLeft}`;
   } else {
     clearInterval(timer);
     endGame();

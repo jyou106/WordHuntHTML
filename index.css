@@ -10,15 +10,16 @@ body {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 50px);
+  grid-template-columns: repeat(4, 80px); /* Increased tile width */
+  grid-template-rows: repeat(4, 80px);    /* Increased tile height */
   margin: 20px auto; /* Center the board with auto margins */
-  gap: 5px;
+  gap: 10px;         /* Increased gap between tiles */
   justify-content: center; /* Center the grid items */
 }
 
 .tile {
-  width: 50px;
-  height: 50px;
+  width: 80px;      /* Increased tile width */
+  height: 80px;     /* Increased tile height */
   background-color: #f1f1f1;
   border: 1px solid #ccc;
   display: flex;
