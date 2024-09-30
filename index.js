@@ -55,7 +55,7 @@ function startGame() {
 }
 
 function resetTimer() {
-  timeLeft = 10; // Set timer to 80 seconds 
+  timeLeft = 80; // Set timer to 80 seconds 
   document.getElementById('time').textContent = `Timer: ${timeLeft}`; 
 }
 
