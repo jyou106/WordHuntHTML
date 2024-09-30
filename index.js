@@ -26,7 +26,7 @@ let selectedLetters = [];
 let timer;
 let score = 0;
 let timeLeft = 80;
-let foundWords = new Set(); // To store unique words found
+let foundWords = new Set(); 
 
 function createBoard() {
   const boardElement = document.getElementById('board');
@@ -55,7 +55,7 @@ function startGame() {
 }
 
 function resetTimer() {
-  timeLeft = 80; // Set timer to 80 seconds 
+  timeLeft = 80; 
   document.getElementById('time').textContent = `Timer: ${timeLeft}`; 
 }
 
@@ -120,19 +120,61 @@ async function isValidWord(word) {
 async function calculateScore() {
   const word = selectedLetters.join('');
   
-  // Wait for the word validation from the API
-  const valid = await isValidWord(word);
-  
-  if (valid) {
-    foundWords.add(word); // Add valid word to foundWords set
-    const wordLength = selectedLetters.length;
-    score += scoreTable[wordLength] || 0; // Update score based on word length
-    updateScoreDisplay(); // Update the score display after scoring
+  // Check if the word is already found
+  if (foundWords.has(word)) {
+    highlightAlreadyFoundWord(); // Highlight tiles in yellow for already found words
+  } else {
+    // Wait for the word validation from the API
+    const valid = await isValidWord(word);
+    
+    if (valid) {
+      foundWords.add(word); // Add valid word to foundWords set
+      const wordLength = selectedLetters.length;
+      score += scoreTable[wordLength] || 0; // Update score based on word length
+      updateScoreDisplay(); // Update the score display after scoring
+
+      // Highlight selected tiles green for valid words
+      highlightTiles('green');
+    } else {
+      // Highlight the selected tiles in normal color for invalid selections
+      highlightTiles('normal');
+    }
   }
 }
 
-function updateScoreDisplay() {
-  document.getElementById('score-value').textContent = score; 
+function highlightAlreadyFoundWord() {
+  const tiles = document.querySelectorAll('.tile.selected');
+  
+  tiles.forEach(tile => {
+    tile.style.backgroundColor = 'yellow'; // Highlight yellow for already found words
+  });
+
+  setTimeout(() => {
+    tiles.forEach(tile => {
+      tile.style.backgroundColor = ''; // Revert to normal after a brief delay
+    });
+  }, 200); 
+}
+
+function highlightTiles(color) {
+  const tiles = document.querySelectorAll('.tile.selected');
+
+  tiles.forEach(tile => {
+    if (color === 'green') {
+      tile.style.backgroundColor = 'lightgreen'; // Highlight green for valid selections
+    } else if (color === 'normal') {
+      tile.style.backgroundColor = ''; // Revert to normal for invalid selections
+    }
+  });
+
+  // For green highlights, add a timeout to revert back to normal faster
+  if (color === 'green') {
+    setTimeout(() => {
+      tiles.forEach(tile => {
+        tile.style.backgroundColor = ''; // Revert to normal for valid selections
+      });
+    }, 200); // Match the delay with the highlightAlreadyFoundWord
+  }
 }
 
 // Await calculateScore in mouseup event
@@ -187,3 +229,7 @@ document.getElementById('start-game-popup').addEventListener('click', () => {
   document.getElementById('how-to-play').style.display = 'none'; 
   startGame(); 
 });
+
+function updateScoreDisplay() {
+  document.getElementById('score-value').textContent = score; // Update the score display
+}

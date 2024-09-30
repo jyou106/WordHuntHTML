@@ -13,7 +13,7 @@ body {
   grid-template-columns: repeat(4, 90px); /* Increased tile width */
   grid-template-rows: repeat(4, 90px);    /* Increased tile height */
   margin: 20px auto; /* Center the board with auto margins */
-  gap: 10px;         /* Increased gap between tiles */
+  gap: 20px;         /* Increased gap between tiles */
   justify-content: center; /* Center the grid items */
 }
 
@@ -31,7 +31,15 @@ body {
 }
 
 .tile.selected {
-  background-color: #FF9999; /* Color for selected letters */
+  background-color: #FF9999; 
+}
+
+.tile.found {
+  background-color: yellow; /* Yellow highlight for previously found words */
+}
+
+.tile.valid {
+  background-color: lightgreen; /* Highlight color for currently selected valid words */
 }
 
 .modal {
